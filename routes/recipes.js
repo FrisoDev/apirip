@@ -1,31 +1,31 @@
 const router = require('express').Router()
-const { Recipe } = require('../models')
+const { Game } = require('../models')
 const passport = require('../config/auth')
 
-router.get('/recipes', (req, res, next) => {
-    Recipe.find()
-      // Newest recipes first
+router.get('/games', (req, res, next) => {
+    Game.find()
+      // Newest games first
       .sort({ createdAt: -1 })
       // Send the data in JSON format
-      .then((recipes) => res.json(recipes))
+      .then((games) => res.json(games))
       // Throw a 500 error if something goes wrong
       .catch((error) => next(error))
   })
-  .get('/recipes/:id', (req, res, next) => {
+  .get('/games/:id', (req, res, next) => {
     const id = req.params.id
-    Recipe.findById(id)
-      .then((recipe) => {
-        if (!recipe) { return next() }
-        res.json(recipe)
+    Game.findById(id)
+      .then((game) => {
+        if (!game) { return next() }
+        res.json(game)
       })
       .catch((error) => next(error))
   })
-  .post('/recipes', passport.authorize('jwt', { session: false }), (req, res, next) => {
-    let newRecipe = req.body
-    newRecipe.authorId = req.account._id
+  .post('/games', passport.authorize('jwt', { session: false }), (req, res, next) => {
+    let newGame = req.body
+    newGame.authorId = req.account._id
 
-    Recipe.create(newRecipe)
-      .then((recipe) => res.json(recipe))
+    Game.create(newGame)
+      .then((game) => res.json(game))
       .catch((error) => next(error))
   })
 
